@@ -6,12 +6,12 @@ import re
 
 class Hat:
     contents = None
-    colors = ['green', 'blue', 'yellow', 'red',
-              'orange', 'black', 'pink', 'striped']
+    colors = ['red', 'orange', 'black', 'blue', 'green', 'yellow', 
+                'pink', 'striped', 'test']
     variables = None
 
-    def __init__(self, green=0, blue=0, red=0, orange=0, black=0, yellow=0, pink=0, striped=0):
-        self.variables = (green, blue, yellow, red, orange, black, pink, striped)
+    def __init__(self, green=0, blue=0, red=0, orange=0, black=0, yellow=0, pink=0, striped=0, test=0):
+        self.variables = (red, orange, black, blue, green, yellow, pink, striped, test)
         self.contents = list()
 
         for i in range(len(self.colors)):
@@ -25,24 +25,21 @@ class Hat:
 
     def draw(self, n) :
         if n >= len(self.contents) :
-            return_contents = self.contents.copy()
-            self.contens = []
             return self.contents
         
-        contents = copy.copy(self.contents)
         ls = list()
         for i in range(n) :
-            idx = random.randrange( len(contents) )
-            ls.append( contents[idx] )
-            del contents[idx]
+            idx = random.randrange( len(self.contents) )
+            ls.append( self.contents[idx] )
+            del self.contents[idx]
         
         return ls
 
 def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
-    N, M = 0, num_experiments
+    N = 0
     
     for k in range(num_experiments) :
-        ls = hat.draw(num_balls_drawn)
+        ls = copy.deepcopy(hat).draw(num_balls_drawn)
         verdict = True
         for ball in expected_balls :
             ball_num = len( re.findall(ball , ' '.join(ls)) )
@@ -51,7 +48,7 @@ def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
                 break
         if verdict : N += 1
                 
-    return N / M
+    return N / num_experiments
             
         
 
@@ -60,10 +57,10 @@ def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
 # hat.draw(3)
 # print(hat.contents)
 
-hat = Hat(black=6, red=4, green=3)
-probability = experiment(hat=hat,
-                  expected_balls={"red":2,"green":1},
-                  num_balls_drawn=5,
-                  num_experiments=2000)
+# hat = Hat(black=6, red=4, green=3, test = 2)
+# probability = experiment(hat=hat,
+#                   expected_balls={"red":2,"green":1},
+#                   num_balls_drawn=20,
+#                   num_experiments=2000)
 
-print(probability)
+# print(probability)
